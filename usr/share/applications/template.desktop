@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Template
+GenericName=template
+Comment=Comentario do template
+Icon=template
+Exec=template
+Terminal=false
+Categories=AudioVideo;AudioVideo;Video;Development;Education;Game;Graphics;Network;Office;Settings;System;Utility;
+Keywords=coloque;palavras;chaves;para;busca;

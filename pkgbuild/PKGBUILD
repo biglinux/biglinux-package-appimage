@@ -1,0 +1,39 @@
+# Maintainer: Barnabé di Kartola <barnabedikartola@gmail.com>
+
+_pkgname=biglinux-package-template
+pkgdesc="AppImage Package template for biglinux"
+# depends=('')
+# conflicts=('')
+pkgver=$(date +%y.%m.%d)
+pkgrel=$(date +%H%M)
+makedepends=('appimagetool' 'desktop-file-utils') # precisa desses 2 pacotes #
+pkgname=${_pkgname}-appimage # não alterar #
+arch=('any')
+license=('GPL3')
+provides=("$pkgname")
+_filename="${_pkgname}-${pkgver}.appimage"
+url="https://github.com/biglinux/$pkgname"
+source=("git+${url}.git")
+md5sums=('SKIP')
+options=(!strip)
+if [ -e "${pkgname}.install" ];then
+    install=${pkgname}.install
+elif [ -e "pkgbuild.install" ];then
+    install=pkgbuild.install
+fi
+
+prepare() {
+  cd ${srcdir}/${pkgname}
+  install -dm755 opt/appimages/
+  unset SOURCE_DATE_EPOCH
+  ARCH=$(uname -m) appimagetool "${srcdir}/${pkgname}/${_pkgname}.AppDir" "opt/appimages/$_filename"
+}
+
+package() {
+  ExecScript="#!/bin/sh\nexec /opt/appimages/${_filename} \"\$@\""
+  install -dm755 "${pkgdir}/usr/bin"
+  echo -e $ExecScript > "${pkgdir}/usr/bin/${_pkgname}"
+
+  cp -r "${srcdir}/${pkgname}/usr" "${pkgdir}/"
+  cp -r "${srcdir}/${pkgname}/opt" "${pkgdir}/"
+}
